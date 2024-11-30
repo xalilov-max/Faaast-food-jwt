@@ -1,38 +1,34 @@
-from rest_framework.generics import GenericAPIView
-from rest_framework.mixins import CreateModelMixin, ListModelMixin
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.viewsets import ModelViewSet
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.throttling import AnonRateThrottle, UserRateThrottle
+from django.core.mail import send_mail
 from .models import FoodType, Food, Comment
 from .serializers import FoodTypeSerializer, FoodSerializer, CommentSerializer
 
-class FoodTypeAPIView(GenericAPIView):
+class FoodTypeViewSet(ModelViewSet):
     queryset = FoodType.objects.all()
     serializer_class = FoodTypeSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    throttle_classes = [AnonRateThrottle, UserRateThrottle]
 
-    def get(self, request, *args, **kwargs):
-        return self.list(request, *args, **kwargs)
-
-    def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
-
-class FoodAPIView(GenericAPIView):
+class FoodViewSet(ModelViewSet):
     queryset = Food.objects.all()
     serializer_class = FoodSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    throttle_classes = [AnonRateThrottle, UserRateThrottle]
 
-    def get(self, request, *args, **kwargs):
-        return self.list(request, *args, **kwargs)
+    def perform_create(self, serializer):
+        instance = serializer.save()
+        send_mail(
+            subject="Yangi ovqat qo'shildi",
+            message=f"Yaratilgan ovqat: {instance.nomi}\nNarxi: {instance.narxi}",
+            from_email="boburx204@gmail.com",
+            recipient_list=["boburx204@gmail.com"],
+            fail_silently=False,
+        )
 
-    def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
-
-class CommentAPIView(GenericAPIView, ListModelMixin, CreateModelMixin):
+class CommentViewSet(ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request, *args, **kwargs):
-        return self.list(request, *args, **kwargs)
-
-    def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    throttle_classes = [AnonRateThrottle, UserRateThrottle]

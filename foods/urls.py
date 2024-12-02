@@ -1,12 +1,12 @@
 from rest_framework.routers import DefaultRouter
-from django.urls import path, include
 from .views import FoodTypeViewSet, FoodViewSet, CommentViewSet
 
 router = DefaultRouter()
-router.register('food-types', FoodTypeViewSet, basename='foodtype')
-router.register('foods', FoodViewSet, basename='food')
-router.register('comments', CommentViewSet, basename='comment')
+router.register('food-types', FoodTypeViewSet)
+router.register('foods', FoodViewSet)
+router.register('comments', CommentViewSet)
 
 urlpatterns = [
-    path('api/', include(router.urls)),  
+    path('v1/', include((router.urls, 'v1'))),  # Versiya 1
+    path('v2/', include((router.urls, 'v2'))),  # Kelajakda Versiya 2 qo'shilishi mumkin
 ]

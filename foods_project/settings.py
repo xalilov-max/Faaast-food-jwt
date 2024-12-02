@@ -143,6 +143,9 @@ REST_FRAMEWORK = {
         'anon': '5/hour',  
         'user': '100/hour',  
     },
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,  
+    'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.NamespaceVersioning',
 }
 
 

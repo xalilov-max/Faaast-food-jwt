@@ -7,6 +7,5 @@ router.register('foods', FoodViewSet)
 router.register('comments', CommentViewSet)
 
 urlpatterns = [
-    path('v1/', include((router.urls, 'v1'))),  # Versiya 1
-    path('v2/', include((router.urls, 'v2'))),  # Kelajakda Versiya 2 qo'shilishi mumkin
-]
+    path('v1/', include((router.urls, 'v1'))),  
+    path('v2/', include((router.urls, 'v2'))),  
